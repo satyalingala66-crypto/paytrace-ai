@@ -10,7 +10,7 @@ const ACTIVE_NETWORK = "sepolia";
 const CONTRACT_ADDRESS = "0x99533653b07a4ab8766e78e0B593e5fDFb06F433";
 
 // 3. Your backend: localhost while building, your Render URL once deployed
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://paytrace-ai.onrender.com";
 
 // 4. The contract's functions and events, in ethers "human-readable" form.
 //    If you change the contract, update this list AND backend/abi.json.
