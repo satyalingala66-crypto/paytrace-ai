@@ -96,19 +96,53 @@ def tx_url(tx_hash):
 
 
 def store_hash_on_chain(hash_hex):
-    """Sign store(hash) with the backend wallet, send it, and wait until it is mined.
-    Returns (record id, transaction hash)."""
+    """Sign store(hash) with the backend wallet, send it, and wait until mined."""
+
+    # Get the latest pending nonce
+    nonce = w3.eth.get_transaction_count(
+        account.address,
+        "pending"
+    )
+
+    # Build transaction
     tx = contract.functions.store(hash_hex).build_transaction({
         "from": account.address,
-        "nonce": w3.eth.get_transaction_count(account.address, "pending"),
+        "nonce": nonce,
+        "chainId": w3.eth.chain_id,
+        "gas": 200000,
+        "gasPrice": w3.eth.gas_price,
     })
+
+    # Sign
     signed = account.sign_transaction(tx)
-    tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
-    receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
+
+    # Send
+    tx_hash = w3.eth.send_raw_transaction(
+        signed.raw_transaction
+    )
+
+    # Wait for mining
+    receipt = w3.eth.wait_for_transaction_receipt(
+    tx_hash,
+    timeout=300,
+    poll_latency=5
+)
+
     if receipt.status != 1:
-        raise RuntimeError(f"Transaction failed on-chain: {tx_url(w3.to_hex(tx_hash))}")
-    event = contract.events.RecordStored().process_receipt(receipt)[0]
-    return event["args"]["id"], w3.to_hex(tx_hash)
+        raise RuntimeError(
+            f"Transaction failed on-chain: "
+            f"{tx_url(w3.to_hex(tx_hash))}"
+        )
+
+    # Read RecordStored event
+    event = contract.events.RecordStored().process_receipt(
+        receipt
+    )[0]
+
+    return (
+        event["args"]["id"],
+        w3.to_hex(tx_hash)
+    )
 
 
 # ---------------------------------------------------------------- routes
@@ -126,10 +160,90 @@ def health():
 
 @app.post("/ai/decide")
 def ai_decide():
-    """Send the prompt to any OpenAI-compatible chat API and return its answer."""
-    prompt = (request.get_json(silent=True) or {}).get("prompt", "").strip()
+    """Analyze a payment or answer a normal AI prompt."""
+
+    data = request.get_json(silent=True) or {}
+
+    prompt = (data.get("prompt") or "").strip()
+
+    if not prompt and data.get("payment"):
+        payment = data["payment"]
+
+        amount = payment.get("amount", 0)
+        from_currency = payment.get("fromCurrency", "USD")
+        to_currency = payment.get("toCurrency", "INR")
+        from_country = payment.get("fromCountry", "USA")
+        to_country = payment.get("toCountry", "India")
+
+        hops = payment.get("hops", [])
+
+        total_fees = sum(
+            float(hop.get("fee", 0))
+            for hop in hops
+        )
+
+        total_fx_loss = sum(
+            float(hop.get("fxLoss", 0))
+            for hop in hops
+        )
+
+        prompt = (
+            f"Analyze this cross-border payment. "
+            f"Amount: {amount} {from_currency}. "
+            f"Route: {from_country} to {to_country}. "
+            f"Receiving currency: {to_currency}. "
+            f"Total intermediary fees: ${total_fees:.2f}. "
+            f"Total FX loss: ${total_fx_loss:.2f}. "
+            f"Payment hops: {len(hops)}. "
+            f"Identify the most expensive stage and recommend "
+            f"a cheaper route, intermediary or FX strategy. "
+            f"Give an estimated potential saving."
+        )
+
     if not prompt:
         return jsonify(error="prompt is required"), 400
+
+    if not AI_API_KEY:
+        return jsonify({
+            "decision": (
+                "DEMO AI ANALYSIS: "
+                "Payment analyzed successfully. "
+                "A lower-fee intermediary route and improved "
+                "FX conversion rate could reduce the total payment cost."
+            ),
+            "demo": True
+        })
+
+    response = requests.post(
+        f"{AI_BASE_URL}/chat/completions",
+        headers={
+            "Authorization": f"Bearer {AI_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": AI_MODEL,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        },
+        timeout=60
+    )
+
+    response.raise_for_status()
+
+    result = response.json()
+
+    decision = (
+        result["choices"][0]["message"]["content"]
+    )
+
+    return jsonify({
+        "decision": decision,
+        "demo": False
+    })
 
     if not AI_API_KEY:  # demo mode: the rest of the flow still works without a key
         return {"decision": f"DEMO DECISION (no API_KEY set): approve \"{prompt[:80]}\"", "demo": True}

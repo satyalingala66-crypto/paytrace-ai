@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>PayTrace AI | Cross-Border Payment Intelligence</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+
+    <div>
+      <h1>💸 PayTrace AI</h1>
+
+      <p>
+        Cross-Border Payment Intelligence
+      </p>
+    </div>
+
+    <div>
+      <span id="network-badge">
+        Ethereum Sepolia
+      </span>
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <!-- ================================================= -->
+    <!-- WALLET -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>🔐 Wallet</h2>
+
+      <button id="connect-btn">
+        Connect Wallet
+      </button>
+
+      <p id="wallet-address">
+        Wallet not connected
+      </p>
+
+      <p id="wallet-balance">
+        Balance: -
+      </p>
+
+      <p id="connect-status"></p>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- CREATE PAYMENT -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>💰 Create Cross-Border Payment</h2>
+
+      <div class="form-grid">
+
+        <div>
+
+          <label>
+            Payment Amount
+          </label>
+
+          <input
+            id="payment-amount"
+            type="number"
+            value="1000"
+            min="1"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>
+            From Currency
+          </label>
+
+          <select id="from-currency">
+
+            <option value="USD">
+              USD
+            </option>
+
+            <option value="EUR">
+              EUR
+            </option>
+
+            <option value="GBP">
+              GBP
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            From Country
+          </label>
+
+          <select id="from-country">
+
+            <option value="USA">
+              USA
+            </option>
+
+            <option value="UK">
+              UK
+            </option>
+
+            <option value="Germany">
+              Germany
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            To Currency
+          </label>
+
+          <select id="to-currency">
+
+            <option value="INR">
+              INR
+            </option>
+
+            <option value="EUR">
+              EUR
+            </option>
+
+            <option value="USD">
+              USD
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            To Country
+          </label>
+
+          <select id="to-country">
+
+            <option value="India">
+              India
+            </option>
+
+            <option value="USA">
+              USA
+            </option>
+
+            <option value="UK">
+              UK
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <button id="create-payment-btn">
+        🚀 Create Payment
+      </button>
+
+      <p id="payment-status"></p>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- PAYMENT JOURNEY -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>🛣️ Payment Journey</h2>
+
+      <div class="stats">
+
+        <div>
+          <span>Payment ID</span>
+          <strong id="payment-id">-</strong>
+        </div>
+
+        <div>
+          <span>Total Amount</span>
+          <strong id="payment-total">$0.00</strong>
+        </div>
+
+        <div>
+          <span>Status</span>
+          <strong id="payment-current-status">
+            Waiting
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div id="timeline"></div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FEE BREAKDOWN -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>💸 Fee & FX Breakdown</h2>
+
+      <div class="stats">
+
+        <div>
+          <span>Original Amount</span>
+          <strong id="original-amount">
+            $0.00
+          </strong>
+        </div>
+
+        <div>
+          <span>Total Fees</span>
+          <strong id="total-fees">
+            $0.00
+          </strong>
+        </div>
+
+        <div>
+          <span>FX Loss</span>
+          <strong id="fx-loss">
+            $0.00
+          </strong>
+        </div>
+
+        <div>
+          <span>Final Amount</span>
+          <strong id="final-amount">
+            $0.00
+          </strong>
+        </div>
+
+      </div>
+
+
+      <h3>
+        Where did the money go?
+      </h3>
+
+      <div id="fee-breakdown"></div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- AI OPTIMIZATION -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>🤖 AI Fee Optimization</h2>
+
+      <p>
+        Let AI analyze the payment journey and
+        identify possible savings.
+      </p>
+
+      <button id="ai-optimize-btn">
+        ✨ Optimize with AI
+      </button>
+
+      <p id="ai-status"></p>
+
+
+      <div id="ai-result">
+
+        <h3>
+          AI Recommendation
+        </h3>
+
+        <p id="ai-recommendation">
+          No analysis yet.
+        </p>
+
+        <div class="stats">
+
+          <div>
+            <span>Estimated Saving</span>
+
+            <strong id="estimated-saving">
+              $0
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- BLOCKCHAIN -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>
+        ⛓️ Blockchain Verification
+      </h2>
+
+      <p>
+        Record every completed payment hop
+        as a tamper-evident blockchain proof.
+      </p>
+
+
+      <button id="record-blockchain-btn">
+        🔐 Record Payment Journey on Blockchain
+      </button>
+
+
+      <p id="blockchain-status"></p>
+
+
+      <h3>
+        Blockchain Records
+      </h3>
+
+      <div id="blockchain-records">
+
+        <p>
+          No blockchain proofs yet.
+        </p>
+
+      </div>
+
+
+      <button
+        id="refresh-btn"
+        class="secondary"
+      >
+        🔄 Refresh Blockchain Records
+      </button>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- INSIGHTS -->
+    <!-- ================================================= -->
+
+    <section class="card">
+
+      <h2>
+        📊 Payment Insights
+      </h2>
+
+
+      <div class="stats">
+
+        <div>
+
+          <span>
+            Total Payments
+          </span>
+
+          <strong id="total-payments">
+            0
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Fees Paid
+          </span>
+
+          <strong id="insight-fees">
+            $0
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Potential Savings
+          </span>
+
+          <strong id="potential-savings">
+            $0
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Blockchain Proofs
+          </span>
+
+          <strong id="blockchain-proofs">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+
+    PayTrace AI · INNOBLOCK 2.0 · PS37
+
+  </footer>
+
+
+  <!-- ================================================= -->
+  <!-- JAVASCRIPT -->
+  <!-- ================================================= -->
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.17.0/dist/ethers.umd.min.js"></script>
+
+  <script src="config.js"></script>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>

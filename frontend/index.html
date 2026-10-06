@@ -1,77 +1,448 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>INNOBLOCK 2.0 Starter dApp</title>
-  <link rel="icon" href="data:,">
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>PayTrace AI | Cross-Border Payment Intelligence</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+  <!-- ================= HEADER ================= -->
+
   <header>
-    <div>
-      <h1>Proof Registry</h1>
-      <p class="sub">INNOBLOCK 2.0 starter: store a fingerprint of any text on-chain, then prove it was never changed.</p>
+
+    <div class="brand">
+      <h1>💸 PayTrace AI</h1>
+
+      <p class="sub">
+        Cross-Border Payment Intelligence
+      </p>
+
+      <div class="hero-tags">
+        <span>🤖 AI Optimized</span>
+        <span>⛓️ Blockchain Verified</span>
+        <span>🌍 Global Payments</span>
+      </div>
     </div>
-    <span id="network-badge" class="badge"></span>
+
+    <div class="network-box">
+      <span class="network-dot"></span>
+      <span id="network-badge">Ethereum Sepolia</span>
+    </div>
+
   </header>
 
-  <div id="setup-warning" class="banner hidden"></div>
 
   <main>
-    <!-- 1. Wallet -->
-    <section class="card">
-      <h2><span class="step">1</span> Connect your wallet</h2>
-      <p class="hint">MetaMask (or any browser wallet) on the network shown above.</p>
-      <button id="connect-btn">Connect wallet</button>
-      <dl class="facts">
-        <dt>Address</dt><dd id="wallet-address">Not connected</dd>
-        <dt>Balance</dt><dd id="wallet-balance">-</dd>
-      </dl>
-      <div id="connect-status" class="status"></div>
-    </section>
 
-    <!-- 2. User signs -->
-    <section class="card">
-      <h2><span class="step">2</span> Store from your wallet</h2>
-      <p class="hint">You sign the transaction in MetaMask and pay the (test) gas.</p>
-      <textarea id="wallet-text" rows="3" placeholder="Type anything: a certificate, a vote, a land record..."></textarea>
-      <button id="wallet-store-btn">Store fingerprint on-chain</button>
-      <div id="wallet-status" class="status"></div>
-    </section>
+    <!-- ================= TOP CONTROL ROW ================= -->
 
-    <!-- 3. Backend signs -->
-    <section class="card">
-      <h2><span class="step">3</span> AI decision, recorded on-chain</h2>
-      <p class="hint">The backend asks an AI model, then signs with its own wallet. No API key? It returns a demo answer.</p>
-      <textarea id="ai-prompt" rows="2" placeholder="e.g. Should loan application #12 be approved? Income 40k, debt 5k."></textarea>
-      <button id="ai-ask-btn">Ask the AI</button>
-      <textarea id="ai-decision" rows="3" placeholder="The AI's decision appears here. You can edit it before storing."></textarea>
-      <button id="ai-store-btn">Store decision on-chain</button>
-      <div id="ai-status" class="status"></div>
-    </section>
+    <section class="card wallet-card">
 
-    <!-- 4. Verify -->
-    <section class="card wide">
-      <h2><span class="step">4</span> Records and verification</h2>
-      <p class="hint">Records saved by the backend. Edit any text and press Verify: one changed character and it fails.</p>
-      <button id="refresh-btn" class="secondary">Refresh records</button>
-      <div id="records"></div>
-      <h3>Check any record by id</h3>
-      <p class="hint">Works for records stored from a wallet in step 2 too: enter the id and the exact text.</p>
-      <div class="record">
-        <input id="check-id" class="rid-input" type="number" min="1" placeholder="id">
-        <input id="check-text" placeholder="Exact text that was stored">
-        <button id="check-btn" class="secondary">Verify</button>
-        <span id="check-result" class="result"></span>
+      <div class="card-heading">
+        <div>
+          <h2>🔐 Wallet</h2>
+          <p class="sub">Connect your testnet wallet</p>
+        </div>
+
+        <span class="mini-status">TESTNET</span>
       </div>
+
+      <button id="connect-btn">
+        Connect Wallet
+      </button>
+
+      <div class="wallet-info">
+        <div>
+          <span>Address</span>
+          <strong id="wallet-address">
+            Wallet not connected
+          </strong>
+        </div>
+
+        <div>
+          <span>Balance</span>
+          <strong id="wallet-balance">
+            -
+          </strong>
+        </div>
+      </div>
+
+      <p id="connect-status" class="status"></p>
+
     </section>
+
+
+    <!-- ================= CREATE PAYMENT ================= -->
+
+    <section class="card payment-create-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>💰 Create Cross-Border Payment</h2>
+          <p class="sub">
+            Simulate a real-world international payment
+          </p>
+        </div>
+
+        <span class="step">1</span>
+      </div>
+
+      <div class="form-grid">
+
+        <div>
+          <label>Payment Amount</label>
+
+          <input
+            id="payment-amount"
+            type="number"
+            value="1000"
+            min="1"
+          >
+        </div>
+
+        <div>
+          <label>From Currency</label>
+
+          <select id="from-currency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+
+        <div>
+          <label>From Country</label>
+
+          <select id="from-country">
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="Germany">Germany</option>
+          </select>
+        </div>
+
+        <div>
+          <label>To Currency</label>
+
+          <select id="to-currency">
+            <option value="INR">INR</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+
+        <div>
+          <label>To Country</label>
+
+          <select id="to-country">
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button id="create-payment-btn">
+        🚀 Create Payment
+      </button>
+
+      <p id="payment-status" class="status"></p>
+
+    </section>
+
+
+    <!-- ================= PAYMENT JOURNEY ================= -->
+
+    <section class="card wide journey-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>🛣️ Live Payment Journey</h2>
+          <p class="sub">
+            Track every hop, fee and processing time
+          </p>
+        </div>
+
+        <span class="step">2</span>
+      </div>
+
+      <div class="stats highlight-stats">
+
+        <div>
+          <span>Payment ID</span>
+          <strong id="payment-id">-</strong>
+        </div>
+
+        <div>
+          <span>Total Amount</span>
+          <strong id="payment-total">$0.00</strong>
+        </div>
+
+        <div>
+          <span>Current Status</span>
+          <strong id="payment-current-status">
+            Waiting
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="journey-label">
+        <span>Payment Flow</span>
+        <span>STATUS → FEE → TIME</span>
+      </div>
+
+      <div id="timeline"></div>
+
+    </section>
+
+
+    <!-- ================= FEE BREAKDOWN ================= -->
+
+    <section class="card fee-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>💸 Fee & FX Breakdown</h2>
+          <p class="sub">
+            See exactly where money is lost
+          </p>
+        </div>
+
+        <span class="step">3</span>
+      </div>
+
+      <div class="stats">
+
+        <div>
+          <span>Original Amount</span>
+          <strong id="original-amount">$0.00</strong>
+        </div>
+
+        <div>
+          <span>Total Fees</span>
+          <strong id="total-fees">$0.00</strong>
+        </div>
+
+        <div>
+          <span>FX Loss</span>
+          <strong id="fx-loss">$0.00</strong>
+        </div>
+
+        <div class="success-stat">
+          <span>Final Amount</span>
+          <strong id="final-amount">$0.00</strong>
+        </div>
+
+      </div>
+
+      <div class="section-divider"></div>
+
+      <h3>Where did the money go?</h3>
+
+      <div id="fee-breakdown"></div>
+
+    </section>
+
+
+    <!-- ================= AI ================= -->
+
+    <section class="card ai-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>🤖 AI Fee Optimization</h2>
+          <p class="sub">
+            Find cheaper routes, timing and FX choices
+          </p>
+        </div>
+
+        <span class="step ai-step">4</span>
+      </div>
+
+      <div class="ai-intro">
+        <div class="ai-icon">✨</div>
+
+        <div>
+          <strong>Smart Payment Analysis</strong>
+
+          <p>
+            Let AI analyze the payment journey and identify
+            avoidable costs and potential savings.
+          </p>
+        </div>
+      </div>
+
+      <button id="ai-optimize-btn">
+        ✨ Optimize with AI
+      </button>
+
+      <p id="ai-status" class="status"></p>
+
+      <div id="ai-result">
+
+        <div class="recommendation-header">
+          <span>AI Recommendation</span>
+          <span class="ai-badge">AI POWERED</span>
+        </div>
+
+        <p id="ai-recommendation">
+          No analysis yet.
+        </p>
+
+        <div class="saving-box">
+
+          <span>Estimated Saving</span>
+
+          <strong id="estimated-saving">
+            $0
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= BLOCKCHAIN ================= -->
+
+    <section class="card wide blockchain-card">
+
+      <div class="card-heading">
+
+        <div>
+          <h2>⛓️ Blockchain Verification</h2>
+
+          <p class="sub">
+            Every completed payment hop becomes a
+            tamper-evident proof on Ethereum Sepolia.
+          </p>
+        </div>
+
+        <span class="step blockchain-step">5</span>
+
+      </div>
+
+      <div class="blockchain-banner">
+        <div class="chain-icon">🔐</div>
+
+        <div>
+          <strong>On-chain Payment Proofs</strong>
+
+          <p>
+            Verify that payment records have not been altered.
+          </p>
+        </div>
+      </div>
+
+      <button id="record-blockchain-btn">
+        🔐 Record Payment Journey on Blockchain
+      </button>
+
+      <p id="blockchain-status" class="status"></p>
+
+      <div class="records-heading">
+        <h3>Blockchain Records</h3>
+
+        <span>
+          Each proof links to Sepolia Explorer
+        </span>
+      </div>
+
+      <div id="blockchain-records">
+
+        <p>
+          No blockchain proofs yet.
+        </p>
+
+      </div>
+
+      <button
+        id="refresh-btn"
+        class="secondary"
+      >
+        🔄 Refresh Blockchain Records
+      </button>
+
+    </section>
+
+
+    <!-- ================= INSIGHTS ================= -->
+
+    <section class="card wide insights-card">
+
+      <div class="card-heading">
+
+        <div>
+          <h2>📊 Payment Insights</h2>
+
+          <p class="sub">
+            Your payment intelligence at a glance
+          </p>
+        </div>
+
+      </div>
+
+      <div class="insight-grid">
+
+        <div class="insight-box">
+          <span>💳 Total Payments</span>
+          <strong id="total-payments">0</strong>
+        </div>
+
+        <div class="insight-box">
+          <span>💸 Fees Paid</span>
+          <strong id="insight-fees">$0</strong>
+        </div>
+
+        <div class="insight-box saving-insight">
+          <span>💰 Potential Savings</span>
+          <strong id="potential-savings">$0</strong>
+        </div>
+
+        <div class="insight-box">
+          <span>⛓️ Blockchain Proofs</span>
+          <strong id="blockchain-proofs">0</strong>
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
-  <footer>Built from the INNOBLOCK 2.0 starter · GCET Blockchain Club</footer>
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <strong>PayTrace AI</strong>
+    · INNOBLOCK 2.0
+    · PS37
+    · Ethereum Sepolia Testnet
+
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.17.0/dist/ethers.umd.min.js"></script>
+
   <script src="config.js"></script>
+
   <script src="app.js"></script>
+
 </body>
+
 </html>

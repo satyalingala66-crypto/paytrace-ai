@@ -14,8 +14,7 @@ let signer = null;
 let userAddress = null;
 let readContract = null;
 let currentPayment = null;
-let blockchainProofCount = 0;
-let isRecording = false;
+
 
 // -------------------------
 // HELPERS
@@ -51,6 +50,7 @@ function txUrl(txHash) {
   return `${NETWORK.explorer}/tx/${txHash}`;
 }
 
+
 // -------------------------
 // BACKEND API
 // -------------------------
@@ -67,20 +67,21 @@ async function api(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(
-      data.error || `Backend error: ${response.status}`
-    );
+    throw new Error(data.error || `Backend error: ${response.status}`);
   }
 
   return data;
 }
+
 
 // ============================================================
 // WALLET
 // ============================================================
 
 async function connectWallet() {
+
   try {
+
     if (!window.ethereum) {
       setText(
         "connect-status",
@@ -89,34 +90,22 @@ async function connectWallet() {
       return;
     }
 
-    setText(
-      "connect-status",
-      "Connecting to MetaMask..."
-    );
+    setText("connect-status", "Connecting to MetaMask...");
 
-    provider =
-      new ethers.BrowserProvider(
-        window.ethereum
-      );
+    provider = new ethers.BrowserProvider(window.ethereum);
 
-    await provider.send(
-      "eth_requestAccounts",
-      []
-    );
+    await provider.send("eth_requestAccounts", []);
 
-    signer =
-      await provider.getSigner();
+    signer = await provider.getSigner();
 
-    userAddress =
-      await signer.getAddress();
+    userAddress = await signer.getAddress();
 
-    const network =
-      await provider.getNetwork();
+    const network = await provider.getNetwork();
 
-    const chainId =
-      Number(network.chainId);
+    const chainId = Number(network.chainId);
 
     if (chainId !== NETWORK.chainId) {
+
       setText(
         "connect-status",
         `⚠️ Please switch MetaMask to ${NETWORK.name}.`
@@ -124,17 +113,15 @@ async function connectWallet() {
 
       try {
         await window.ethereum.request({
-          method:
-            "wallet_switchEthereumChain",
-
+          method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId:
-                `0x${NETWORK.chainId.toString(16)}`
+              chainId: `0x${NETWORK.chainId.toString(16)}`
             }
           ]
         });
       } catch (switchError) {
+
         console.error(switchError);
 
         setText(
@@ -146,10 +133,7 @@ async function connectWallet() {
       }
     }
 
-    const balance =
-      await provider.getBalance(
-        userAddress
-      );
+    const balance = await provider.getBalance(userAddress);
 
     setText(
       "wallet-address",
@@ -158,9 +142,7 @@ async function connectWallet() {
 
     setText(
       "wallet-balance",
-      `${Number(
-        ethers.formatEther(balance)
-      ).toFixed(4)} ETH`
+      `${Number(ethers.formatEther(balance)).toFixed(4)} ETH`
     );
 
     setText(
@@ -168,27 +150,31 @@ async function connectWallet() {
       "✅ Wallet connected"
     );
 
-    readContract =
-      new ethers.Contract(
-        CONTRACT_ADDRESS,
-        CONTRACT_ABI,
-        provider
-      );
+    readContract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      CONTRACT_ABI,
+      provider
+    );
 
   } catch (err) {
+
     setText(
       "connect-status",
       `❌ ${friendlyError(err)}`
     );
+
   }
 }
+
 
 // ============================================================
 // CREATE PAYMENT
 // ============================================================
 
 function createPayment() {
+
   try {
+
     const amount =
       Number($("payment-amount")?.value) || 1000;
 
@@ -204,9 +190,12 @@ function createPayment() {
     const toCountry =
       $("to-country")?.value || "India";
 
-    // Mock payment journey for PS37 demonstration.
-    // Exchange rates represent simulated intermediary/FX data.
+
+    // Mock payment journey
+    // Designed for PS37 demonstration
+
     currentPayment = {
+
       id:
         "PT-" +
         Date.now().toString().slice(-6),
@@ -220,13 +209,13 @@ function createPayment() {
       toCountry,
 
       hops: [
+
         {
           name: "Payment Initiated",
           status: "Completed",
           fee: 2,
           fxLoss: 0,
-          time: 1,
-          fxRate: "1 USD = 1.00 USD"
+          time: 1
         },
 
         {
@@ -234,8 +223,7 @@ function createPayment() {
           status: "Completed",
           fee: 6,
           fxLoss: 0,
-          time: 3,
-          fxRate: "1 USD = 1.00 USD"
+          time: 3
         },
 
         {
@@ -243,8 +231,7 @@ function createPayment() {
           status: "Completed",
           fee: 12,
           fxLoss: 0,
-          time: 8,
-          fxRate: "1 USD = 1.00 USD"
+          time: 8
         },
 
         {
@@ -252,8 +239,7 @@ function createPayment() {
           status: "Completed",
           fee: 3,
           fxLoss: 14,
-          time: 4,
-          fxRate: "1 USD = 83.20 INR"
+          time: 4
         },
 
         {
@@ -261,11 +247,13 @@ function createPayment() {
           status: "Completed",
           fee: 3,
           fxLoss: 0,
-          time: 5,
-          fxRate: "1 USD = 82.03 INR"
+          time: 5
         }
+
       ]
+
     };
+
 
     renderPayment();
 
@@ -273,24 +261,29 @@ function createPayment() {
 
     updateInsights();
 
+
     setText(
       "payment-status",
       `✅ Payment ${currentPayment.id} created`
     );
 
   } catch (err) {
+
     setText(
       "payment-status",
       `❌ ${friendlyError(err)}`
     );
+
   }
 }
+
 
 // ============================================================
 // RENDER PAYMENT
 // ============================================================
 
 function renderPayment() {
+
   if (!currentPayment) return;
 
   setText(
@@ -303,75 +296,18 @@ function renderPayment() {
     `$${currentPayment.amount.toFixed(2)}`
   );
 
-  const totalTime =
-    currentPayment.hops.reduce(
-      (sum, hop) => sum + hop.time,
-      0
-    );
-
-  const expectedTime = 15;
-
-  const isDelayed =
-    totalTime > expectedTime;
-
   setText(
     "payment-current-status",
-    isDelayed
-      ? "Completed • Delay Detected"
-      : "Completed"
+    "Completed"
   );
 
-  const timeline =
-    $("timeline");
+
+  const timeline = $("timeline");
 
   if (!timeline) return;
 
   timeline.innerHTML = "";
 
-  // ----------------------------------------------------------
-  // Delay / ETA Alert
-  // ----------------------------------------------------------
-
-  if (isDelayed) {
-    const alert = document.createElement("div");
-
-    alert.style.cssText = `
-      margin-bottom: 20px;
-      padding: 16px 18px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 180, 70, 0.35);
-      background: rgba(255, 170, 50, 0.08);
-      color: #ffd89a;
-      font-size: 15px;
-      line-height: 1.5;
-    `;
-
-    alert.innerHTML = `
-      <strong>
-        ⚠️ Payment Delay Alert
-      </strong>
-
-      <br>
-
-      This payment took
-      <strong>${totalTime} minutes</strong>,
-      which is above the expected
-      <strong>${expectedTime} minutes</strong>.
-      
-      <br>
-
-      <span style="opacity:0.8;">
-        AI can use this history to recommend
-        faster payment routes in future.
-      </span>
-    `;
-
-    timeline.appendChild(alert);
-  }
-
-  // ----------------------------------------------------------
-  // Payment Timeline
-  // ----------------------------------------------------------
 
   currentPayment.hops.forEach(
     (hop, index) => {
@@ -382,7 +318,9 @@ function renderPayment() {
       item.className =
         "timeline-item";
 
+
       item.innerHTML = `
+
         <div class="timeline-number">
           ${index + 1}
         </div>
@@ -394,72 +332,64 @@ function renderPayment() {
           </h4>
 
           <p>
-            <strong>
-              ${hop.status}
-            </strong>
+            <strong>${hop.status}</strong>
           </p>
 
           <p>
             Fee:
-            <strong>
-              $${hop.fee.toFixed(2)}
-            </strong>
+            <strong>$${hop.fee.toFixed(2)}</strong>
           </p>
 
           <p>
             FX Loss:
-            <strong>
-              $${hop.fxLoss.toFixed(2)}
-            </strong>
-          </p>
-
-          <p>
-            Exchange Rate:
-            <strong>
-              ${hop.fxRate || "N/A"}
-            </strong>
+            <strong>$${hop.fxLoss.toFixed(2)}</strong>
           </p>
 
           <p>
             Time:
-            <strong>
-              ${hop.time} min
-            </strong>
+            <strong>${hop.time} min</strong>
           </p>
 
         </div>
+
       `;
 
       timeline.appendChild(item);
+
     }
   );
+
 }
+
 
 // ============================================================
 // FEE BREAKDOWN
 // ============================================================
 
 function renderFeeBreakdown() {
+
   if (!currentPayment) return;
+
 
   const totalFees =
     currentPayment.hops.reduce(
-      (sum, hop) =>
-        sum + hop.fee,
+      (sum, hop) => sum + hop.fee,
       0
     );
 
+
   const fxLoss =
     currentPayment.hops.reduce(
-      (sum, hop) =>
-        sum + hop.fxLoss,
+      (sum, hop) => sum + hop.fxLoss,
       0
     );
+
 
   const finalAmount =
     currentPayment.amount -
     totalFees -
     fxLoss;
+
 
   setText(
     "original-amount",
@@ -481,6 +411,7 @@ function renderFeeBreakdown() {
     `$${finalAmount.toFixed(2)}`
   );
 
+
   const breakdown =
     $("fee-breakdown");
 
@@ -488,40 +419,46 @@ function renderFeeBreakdown() {
 
   breakdown.innerHTML = "";
 
+
   currentPayment.hops.forEach(
     hop => {
 
       const row =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       row.className =
         "fee-row";
 
       row.innerHTML = `
+
         <span>
           ${hop.name}
         </span>
 
         <strong>
           $${(
-            hop.fee +
-            hop.fxLoss
+            hop.fee + hop.fxLoss
           ).toFixed(2)}
         </strong>
+
       `;
 
       breakdown.appendChild(row);
+
     }
   );
+
 }
+
+
 // ============================================================
 // AI OPTIMIZATION
 // ============================================================
 
 async function optimizeWithAI() {
+
   if (!currentPayment) {
+
     setText(
       "ai-status",
       "⚠️ Create a payment first."
@@ -530,206 +467,105 @@ async function optimizeWithAI() {
     return;
   }
 
+
   try {
+
     setText(
       "ai-status",
       "🤖 AI analyzing payment..."
     );
 
+
     const totalFees =
       currentPayment.hops.reduce(
-        (sum, hop) =>
-          sum + hop.fee,
+        (sum, hop) => sum + hop.fee,
         0
       );
 
+
     const fxLoss =
       currentPayment.hops.reduce(
-        (sum, hop) =>
-          sum + hop.fxLoss,
+        (sum, hop) => sum + hop.fxLoss,
         0
       );
+
 
     const totalCost =
       totalFees + fxLoss;
 
-    // --------------------------------------------------------
-    // Find the most expensive hop
-    // --------------------------------------------------------
 
-    const rankedHops =
-      [...currentPayment.hops]
-        .map((hop, index) => ({
-          ...hop,
-          index,
-          totalCost:
-            hop.fee + hop.fxLoss
-        }))
-        .sort(
-          (a, b) =>
-            b.totalCost -
-            a.totalCost
-        );
-
-    const highestCostHop =
-      rankedHops[0];
-
-    // --------------------------------------------------------
-    // Find fee-heavy and FX-heavy stages
-    // --------------------------------------------------------
-
-    const feeHeavyHop =
-      [...currentPayment.hops]
-        .sort(
-          (a, b) =>
-            b.fee - a.fee
-        )[0];
-
-    const fxHeavyHop =
-      [...currentPayment.hops]
-        .sort(
-          (a, b) =>
-            b.fxLoss - a.fxLoss
-        )[0];
-
-    // --------------------------------------------------------
     // Try backend AI endpoint
-    // --------------------------------------------------------
 
     let backendResult = null;
 
     try {
-      backendResult =
-        await api(
-          "/ai/decide",
-          {
-            method: "POST",
 
-            body:
-              JSON.stringify({
-                payment:
-                  currentPayment
-              })
-          }
-        );
+      backendResult = await api(
+        "/ai/decide",
+        {
+          method: "POST",
 
-      console.log(
-        "AI backend result:",
-        backendResult
+          body: JSON.stringify({
+            payment: currentPayment
+          })
+        }
       );
 
     } catch (backendError) {
+
       console.warn(
         "AI backend unavailable:",
         backendError
       );
+
     }
 
-    // --------------------------------------------------------
-    // Dynamic savings calculation
-    //
-    // Fee-heavy stages:
-    // approximately 40% can be saved
-    //
-    // FX loss:
-    // approximately 50% can be recovered
-    //
-    // This is based on the actual payment data.
-    // --------------------------------------------------------
 
-    const feeSaving =
-      totalFees * 0.40;
+    // Calculate demo recommendation
 
-    const fxSaving =
-      fxLoss * 0.50;
-
-    let estimatedSaving =
-      feeSaving + fxSaving;
-
-    // Don't claim savings greater
-    // than the total cost.
-    estimatedSaving =
-      Math.min(
-        estimatedSaving,
-        totalCost
-      );
-
-    // Keep the displayed number
-    // meaningful for the demo.
-    estimatedSaving =
+    const estimatedSaving =
       Math.max(
-        1,
-        Math.round(
-          estimatedSaving
-        )
+        5,
+        Math.round(totalCost * 0.45)
       );
 
-    // --------------------------------------------------------
-    // Build dynamic recommendation
-    // --------------------------------------------------------
 
-    let recommendation = "";
+    const recommendation =
 
-    if (
-      totalCost <= 0
-    ) {
-      recommendation =
-        "AI Fee Analysis: This payment currently has no significant fee or FX loss. The selected route is already cost-efficient.";
+      `AI Fee Analysis: Your largest cost is the ` +
+      `intermediary + FX conversion stage, ` +
+      `which accounts for $${totalCost.toFixed(2)} ` +
+      `of the payment cost. ` +
+      `A lower-fee intermediary route with a ` +
+      `better FX rate is recommended. ` +
+      `Estimated saving: approximately $${estimatedSaving}.`;
 
-    } else {
-      recommendation =
-        `AI Fee Analysis: The highest-cost stage is ${highestCostHop.name}, contributing $${highestCostHop.totalCost.toFixed(2)} to the total payment cost. `;
-
-      if (
-        feeHeavyHop.fee > 0
-      ) {
-        recommendation +=
-          `The largest direct fee is at ${feeHeavyHop.name} ($${feeHeavyHop.fee.toFixed(2)}). `;
-      }
-
-      if (
-        fxLoss > 0
-      ) {
-        recommendation +=
-          `The main FX impact is at ${fxHeavyHop.name} ($${fxHeavyHop.fxLoss.toFixed(2)} FX loss). `;
-      }
-
-      recommendation +=
-        `AI recommends comparing lower-fee intermediary routes and improving the FX conversion rate. `;
-
-      recommendation +=
-        `Estimated potential saving: approximately $${estimatedSaving}.`;
-    }
-
-    // --------------------------------------------------------
-    // Display result
-    // --------------------------------------------------------
 
     setText(
       "ai-recommendation",
       recommendation
     );
 
+
     setText(
       "estimated-saving",
       `$${estimatedSaving}`
     );
 
+
     const resultBox =
       $("ai-result");
 
     if (resultBox) {
-      resultBox.classList.remove(
-        "hidden"
-      );
+      resultBox.classList.remove("hidden");
     }
+
 
     setText(
       "ai-status",
-      backendResult
-        ? "✅ AI analysis completed using payment data"
-        : "✅ AI analysis completed"
+      "✅ AI analysis completed"
     );
+
 
   } catch (err) {
 
@@ -758,46 +594,14 @@ async function recordPaymentHopsOnChain() {
     return;
   }
 
-  // Prevent accidental double-clicks
-  if (isRecording) {
-
-    setText(
-      "blockchain-status",
-      "⏳ Blockchain recording is already in progress..."
-    );
-
-    return;
-  }
-
-  // Prevent recording the exact same
-  // payment multiple times during one session.
-  if (currentPayment.blockchainRecorded) {
-
-    setText(
-      "blockchain-status",
-      "✅ This payment journey has already been recorded."
-    );
-
-    return;
-  }
-
-  const recordBtn =
-    $("record-blockchain-btn");
 
   try {
-
-    isRecording = true;
-
-    if (recordBtn) {
-      recordBtn.disabled = true;
-      recordBtn.textContent =
-        "Recording...";
-    }
 
     setText(
       "blockchain-status",
       "⛓️ Recording payment journey..."
     );
+
 
     for (
       let i = 0;
@@ -808,21 +612,32 @@ async function recordPaymentHopsOnChain() {
       const hop =
         currentPayment.hops[i];
 
-      setText(
-        "blockchain-status",
-        `⛓️ Recording step ${i + 1} of ${currentPayment.hops.length}: ${hop.name}...`
-      );
 
       const proofText = JSON.stringify({
-  paymentId: currentPayment.id,
-  step: i + 1,
-  hop: hop.name,
-  status: hop.status,
-  fee: hop.fee,
-  fxLoss: hop.fxLoss,
-  fxRate: hop.fxRate || "N/A",
-  time: hop.time
-});
+
+        paymentId:
+          currentPayment.id,
+
+        step:
+          i + 1,
+
+        hop:
+          hop.name,
+
+        status:
+          hop.status,
+
+        fee:
+          hop.fee,
+
+        fxLoss:
+          hop.fxLoss,
+
+        time:
+          hop.time
+
+      });
+
 
       const response =
         await api(
@@ -830,31 +645,31 @@ async function recordPaymentHopsOnChain() {
           {
             method: "POST",
 
-            body:
-              JSON.stringify({
-                text:
-                  proofText
-              })
+            body: JSON.stringify({
+              text: proofText
+            })
           }
         );
+
 
       console.log(
         "Blockchain proof:",
         response
       );
+
     }
 
-    currentPayment.blockchainRecorded =
-      true;
 
     setText(
       "blockchain-status",
       "✅ All payment hops recorded on blockchain"
     );
 
+
     await loadBlockchainRecords();
 
     updateInsights();
+
 
   } catch (err) {
 
@@ -862,16 +677,6 @@ async function recordPaymentHopsOnChain() {
       "blockchain-status",
       `❌ ${friendlyError(err)}`
     );
-
-  } finally {
-
-    isRecording = false;
-
-    if (recordBtn) {
-      recordBtn.disabled = false;
-      recordBtn.textContent =
-        "Record Payment Journey";
-    }
 
   }
 }
@@ -888,6 +693,7 @@ async function loadBlockchainRecords() {
 
   if (!container) return;
 
+
   try {
 
     setText(
@@ -895,25 +701,17 @@ async function loadBlockchainRecords() {
       "Loading blockchain records..."
     );
 
+
     const data =
-      await api(
-        "/records"
-      );
+      await api("/records");
+
 
     container.innerHTML = "";
 
-    const records =
-      Array.isArray(
-        data.records
-      )
-        ? data.records
-        : [];
-
-    blockchainProofCount =
-      records.length;
 
     if (
-      records.length === 0
+      !data.records ||
+      data.records.length === 0
     ) {
 
       container.innerHTML =
@@ -924,23 +722,22 @@ async function loadBlockchainRecords() {
         "No records yet"
       );
 
-      updateInsights();
-
       return;
     }
 
-    records.forEach(
+
+    data.records.forEach(
       record => {
 
         const row =
-          document.createElement(
-            "div"
-          );
+          document.createElement("div");
 
         row.className =
           "record";
 
+
         row.innerHTML = `
+
           <strong>
             Proof #${record.id}
           </strong>
@@ -952,20 +749,21 @@ async function loadBlockchainRecords() {
           >
             View proof ↗
           </a>
+
         `;
 
-        container.appendChild(
-          row
-        );
+
+        container.appendChild(row);
+
       }
     );
 
+
     setText(
       "blockchain-status",
-      `✅ ${records.length} blockchain proof(s)`
+      `✅ ${data.records.length} blockchain proof(s)`
     );
 
-    updateInsights();
 
   } catch (err) {
 
@@ -986,36 +784,29 @@ function updateInsights() {
 
   if (!currentPayment) return;
 
+
   const totalFees =
     currentPayment.hops.reduce(
-      (sum, hop) =>
-        sum + hop.fee,
+      (sum, hop) => sum + hop.fee,
       0
     );
+
 
   const fxLoss =
     currentPayment.hops.reduce(
-      (sum, hop) =>
-        sum + hop.fxLoss,
+      (sum, hop) => sum + hop.fxLoss,
       0
     );
 
-  const totalCost =
-    totalFees + fxLoss;
 
-  // Same dynamic calculation used
-  // by the AI section.
   const potentialSavings =
-    Math.min(
-      totalCost,
-      Math.max(
-        1,
-        Math.round(
-          totalFees * 0.40 +
-          fxLoss * 0.50
-        )
+    Math.max(
+      5,
+      Math.round(
+        (totalFees + fxLoss) * 0.45
       )
     );
+
 
   setText(
     "total-payments",
@@ -1032,13 +823,9 @@ function updateInsights() {
     `$${potentialSavings.toFixed(2)}`
   );
 
-  setText(
-    "blockchain-proofs",
-    String(
-      blockchainProofCount
-    )
-  );
 }
+
+
 // ============================================================
 // INITIALIZATION
 // ============================================================
@@ -1049,74 +836,73 @@ function init() {
     "🚀 PayTrace AI initializing..."
   );
 
-  // ----------------------------------------------------------
+
   // Wallet
-  // ----------------------------------------------------------
 
   const connectBtn =
     $("connect-btn");
 
   if (connectBtn) {
+
     connectBtn.onclick =
       connectWallet;
+
   }
 
 
-  // ----------------------------------------------------------
-  // Create Payment
-  // ----------------------------------------------------------
+  // Create payment
 
   const createBtn =
     $("create-payment-btn");
 
   if (createBtn) {
+
     createBtn.onclick =
       createPayment;
+
   }
 
 
-  // ----------------------------------------------------------
-  // AI Optimization
-  // ----------------------------------------------------------
+  // AI
 
   const aiBtn =
     $("ai-optimize-btn");
 
   if (aiBtn) {
+
     aiBtn.onclick =
       optimizeWithAI;
+
   }
 
 
-  // ----------------------------------------------------------
-  // Blockchain Record
-  // ----------------------------------------------------------
+  // Blockchain record button
 
   const recordBtn =
     $("record-blockchain-btn");
 
   if (recordBtn) {
+
     recordBtn.onclick =
       recordPaymentHopsOnChain;
+
   }
 
 
-  // ----------------------------------------------------------
-  // Refresh Blockchain Records
-  // ----------------------------------------------------------
+  // Refresh
 
   const refreshBtn =
     $("refresh-btn");
 
   if (refreshBtn) {
+
     refreshBtn.onclick =
       loadBlockchainRecords;
+
   }
 
 
-  // ----------------------------------------------------------
-  // MetaMask Events
-  // ----------------------------------------------------------
+  // MetaMask events
 
   if (window.ethereum) {
 
@@ -1133,21 +919,13 @@ function init() {
   }
 
 
-  // ----------------------------------------------------------
-  // Initial Blockchain Records
-  // ----------------------------------------------------------
-
-  loadBlockchainRecords();
-
-
   console.log(
     "✅ PayTrace AI initialized successfully"
   );
+
 }
 
 
-// ============================================================
-// START APPLICATION
-// ============================================================
+// Start application
 
 init();
