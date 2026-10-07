@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -12,7 +13,9 @@
   <title>PayTrace AI | Cross-Border Payment Intelligence</title>
 
   <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
@@ -21,6 +24,7 @@
   <header>
 
     <div class="brand">
+
       <h1>💸 PayTrace AI</h1>
 
       <p class="sub">
@@ -28,15 +32,26 @@
       </p>
 
       <div class="hero-tags">
+
         <span>🤖 AI Optimized</span>
+
         <span>⛓️ Blockchain Verified</span>
+
         <span>🌍 Global Payments</span>
+
       </div>
+
     </div>
 
+
     <div class="network-box">
+
       <span class="network-dot"></span>
-      <span id="network-badge">Ethereum Sepolia</span>
+
+      <span id="network-badge">
+        Ethereum Sepolia
+      </span>
+
     </div>
 
   </header>
@@ -49,35 +64,59 @@
     <section class="card wallet-card">
 
       <div class="card-heading">
+
         <div>
+
           <h2>🔐 Wallet</h2>
-          <p class="sub">Connect your testnet wallet</p>
+
+          <p class="sub">
+            Connect your Sepolia testnet wallet
+          </p>
+
         </div>
 
-        <span class="mini-status">TESTNET</span>
+        <span class="mini-status">
+          TESTNET
+        </span>
+
       </div>
+
 
       <button id="connect-btn">
         Connect Wallet
       </button>
 
+
       <div class="wallet-info">
+
         <div>
+
           <span>Address</span>
+
           <strong id="wallet-address">
             Wallet not connected
           </strong>
+
         </div>
 
+
         <div>
+
           <span>Balance</span>
+
           <strong id="wallet-balance">
             -
           </strong>
+
         </div>
+
       </div>
 
-      <p id="connect-status" class="status"></p>
+
+      <p
+        id="connect-status"
+        class="status"
+      ></p>
 
     </section>
 
@@ -87,76 +126,167 @@
     <section class="card payment-create-card">
 
       <div class="card-heading">
+
         <div>
-          <h2>💰 Create Cross-Border Payment</h2>
+
+          <h2>
+            💰 Create Cross-Border Payment
+          </h2>
+
           <p class="sub">
-            Simulate a real-world international payment
+            Send a real Sepolia testnet USDC payment
           </p>
+
         </div>
 
-        <span class="step">1</span>
+        <span class="step">
+          1
+        </span>
+
       </div>
+
 
       <div class="form-grid">
 
+        <!-- Payment Amount -->
+
         <div>
-          <label>Payment Amount</label>
+
+          <label>
+            Payment Amount (USDC)
+          </label>
 
           <input
             id="payment-amount"
             type="number"
-            value="1000"
-            min="1"
+            value="1"
+            min="0.01"
+            max="19"
+            step="0.01"
           >
+
         </div>
 
+
+        <!-- From Currency -->
+
         <div>
-          <label>From Currency</label>
+
+          <label>
+            From Currency
+          </label>
 
           <select id="from-currency">
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
+
+            <option value="USD">
+              USD
+            </option>
+
+            <option value="EUR">
+              EUR
+            </option>
+
+            <option value="GBP">
+              GBP
+            </option>
+
           </select>
+
         </div>
 
+
+        <!-- From Country -->
+
         <div>
-          <label>From Country</label>
+
+          <label>
+            From Country
+          </label>
 
           <select id="from-country">
-            <option value="USA">USA</option>
-            <option value="UK">UK</option>
-            <option value="Germany">Germany</option>
+
+            <option value="USA">
+              USA
+            </option>
+
+            <option value="UK">
+              UK
+            </option>
+
+            <option value="Germany">
+              Germany
+            </option>
+
           </select>
+
         </div>
 
+
+        <!-- To Currency -->
+
         <div>
-          <label>To Currency</label>
+
+          <label>
+            To Currency
+          </label>
 
           <select id="to-currency">
-            <option value="INR">INR</option>
-            <option value="EUR">EUR</option>
-            <option value="USD">USD</option>
+
+            <option value="INR">
+              INR
+            </option>
+
+            <option value="EUR">
+              EUR
+            </option>
+
+            <option value="USD">
+              USD
+            </option>
+
           </select>
+
         </div>
 
+
+        <!-- To Country -->
+
         <div>
-          <label>To Country</label>
+
+          <label>
+            To Country
+          </label>
 
           <select id="to-country">
-            <option value="India">India</option>
-            <option value="USA">USA</option>
-            <option value="UK">UK</option>
+
+            <option value="India">
+              India
+            </option>
+
+            <option value="USA">
+              USA
+            </option>
+
+            <option value="UK">
+              UK
+            </option>
+
           </select>
+
         </div>
 
       </div>
 
+
       <button id="create-payment-btn">
-        🚀 Create Payment
+        🚀 Send Payment
       </button>
 
-      <p id="payment-status" class="status"></p>
+
+      <p
+        id="payment-status"
+        class="status"
+      ></p>
 
     </section>
 
@@ -166,41 +296,81 @@
     <section class="card wide journey-card">
 
       <div class="card-heading">
+
         <div>
-          <h2>🛣️ Live Payment Journey</h2>
+
+          <h2>
+            🛣️ Live Payment Journey
+          </h2>
+
           <p class="sub">
             Track every hop, fee and processing time
           </p>
+
         </div>
 
-        <span class="step">2</span>
+        <span class="step">
+          2
+        </span>
+
       </div>
+
 
       <div class="stats highlight-stats">
 
         <div>
-          <span>Payment ID</span>
-          <strong id="payment-id">-</strong>
+
+          <span>
+            Payment ID
+          </span>
+
+          <strong id="payment-id">
+            -
+          </strong>
+
         </div>
 
-        <div>
-          <span>Total Amount</span>
-          <strong id="payment-total">$0.00</strong>
-        </div>
 
         <div>
-          <span>Current Status</span>
+
+          <span>
+            Total Amount
+          </span>
+
+          <strong id="payment-total">
+            0 USDC
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Current Status
+          </span>
+
           <strong id="payment-current-status">
             Waiting
           </strong>
+
         </div>
 
       </div>
 
+
       <div class="journey-label">
-        <span>Payment Flow</span>
-        <span>STATUS → FEE → TIME</span>
+
+        <span>
+          Payment Flow
+        </span>
+
+        <span>
+          STATUS → FEE → TIME
+        </span>
+
       </div>
+
 
       <div id="timeline"></div>
 
@@ -212,43 +382,89 @@
     <section class="card fee-card">
 
       <div class="card-heading">
+
         <div>
-          <h2>💸 Fee & FX Breakdown</h2>
+
+          <h2>
+            💸 Fee & FX Breakdown
+          </h2>
+
           <p class="sub">
             See exactly where money is lost
           </p>
+
         </div>
 
-        <span class="step">3</span>
+        <span class="step">
+          3
+        </span>
+
       </div>
+
 
       <div class="stats">
 
         <div>
-          <span>Original Amount</span>
-          <strong id="original-amount">$0.00</strong>
+
+          <span>
+            Original Amount
+          </span>
+
+          <strong id="original-amount">
+            0 USDC
+          </strong>
+
         </div>
 
-        <div>
-          <span>Total Fees</span>
-          <strong id="total-fees">$0.00</strong>
-        </div>
 
         <div>
-          <span>FX Loss</span>
-          <strong id="fx-loss">$0.00</strong>
+
+          <span>
+            Total Fees
+          </span>
+
+          <strong id="total-fees">
+            $0.00
+          </strong>
+
         </div>
+
+
+        <div>
+
+          <span>
+            FX Loss
+          </span>
+
+          <strong id="fx-loss">
+            $0.00
+          </strong>
+
+        </div>
+
 
         <div class="success-stat">
-          <span>Final Amount</span>
-          <strong id="final-amount">$0.00</strong>
+
+          <span>
+            Final Amount
+          </span>
+
+          <strong id="final-amount">
+            0 USDC
+          </strong>
+
         </div>
 
       </div>
 
+
       <div class="section-divider"></div>
 
-      <h3>Where did the money go?</h3>
+
+      <h3>
+        Where did the money go?
+      </h3>
+
 
       <div id="fee-breakdown"></div>
 
@@ -260,49 +476,85 @@
     <section class="card ai-card">
 
       <div class="card-heading">
+
         <div>
-          <h2>🤖 AI Fee Optimization</h2>
+
+          <h2>
+            🤖 AI Fee Optimization
+          </h2>
+
           <p class="sub">
             Find cheaper routes, timing and FX choices
           </p>
+
         </div>
 
-        <span class="step ai-step">4</span>
+        <span class="step ai-step">
+          4
+        </span>
+
       </div>
 
+
       <div class="ai-intro">
-        <div class="ai-icon">✨</div>
+
+        <div class="ai-icon">
+          ✨
+        </div>
+
 
         <div>
-          <strong>Smart Payment Analysis</strong>
+
+          <strong>
+            Smart Payment Analysis
+          </strong>
 
           <p>
             Let AI analyze the payment journey and identify
             avoidable costs and potential savings.
           </p>
+
         </div>
+
       </div>
+
 
       <button id="ai-optimize-btn">
         ✨ Optimize with AI
       </button>
 
-      <p id="ai-status" class="status"></p>
+
+      <p
+        id="ai-status"
+        class="status"
+      ></p>
+
 
       <div id="ai-result">
 
         <div class="recommendation-header">
-          <span>AI Recommendation</span>
-          <span class="ai-badge">AI POWERED</span>
+
+          <span>
+            AI Recommendation
+          </span>
+
+          <span class="ai-badge">
+            AI POWERED
+          </span>
+
         </div>
+
 
         <p id="ai-recommendation">
           No analysis yet.
         </p>
 
+
         <div class="saving-box">
 
-          <span>Estimated Saving</span>
+          <span>
+            Estimated Saving
+          </span>
 
           <strong id="estimated-saving">
             $0
@@ -322,43 +574,71 @@
       <div class="card-heading">
 
         <div>
-          <h2>⛓️ Blockchain Verification</h2>
+
+          <h2>
+            ⛓️ Blockchain Verification
+          </h2>
 
           <p class="sub">
-            Every completed payment hop becomes a
-            tamper-evident proof on Ethereum Sepolia.
+            One tamper-evident proof for the completed
+            payment journey on Ethereum Sepolia.
           </p>
+
         </div>
 
-        <span class="step blockchain-step">5</span>
+        <span class="step blockchain-step">
+          5
+        </span>
 
       </div>
+
 
       <div class="blockchain-banner">
-        <div class="chain-icon">🔐</div>
+
+        <div class="chain-icon">
+          🔐
+        </div>
+
 
         <div>
-          <strong>On-chain Payment Proofs</strong>
+
+          <strong>
+            On-chain Payment Proof
+          </strong>
 
           <p>
-            Verify that payment records have not been altered.
+            Verify that the payment journey and fee
+            data have not been altered.
           </p>
+
         </div>
+
       </div>
+
 
       <button id="record-blockchain-btn">
         🔐 Record Payment Journey on Blockchain
       </button>
 
-      <p id="blockchain-status" class="status"></p>
+
+      <p
+        id="blockchain-status"
+        class="status"
+      ></p>
+
 
       <div class="records-heading">
-        <h3>Blockchain Records</h3>
+
+        <h3>
+          Blockchain Records
+        </h3>
 
         <span>
           Each proof links to Sepolia Explorer
         </span>
+
       </div>
+
 
       <div id="blockchain-records">
 
@@ -367,6 +647,7 @@
         </p>
 
       </div>
+
 
       <button
         id="refresh-btn"
@@ -385,35 +666,71 @@
       <div class="card-heading">
 
         <div>
-          <h2>📊 Payment Insights</h2>
+
+          <h2>
+            📊 Payment Insights
+          </h2>
 
           <p class="sub">
             Your payment intelligence at a glance
           </p>
+
         </div>
 
       </div>
 
+
       <div class="insight-grid">
 
         <div class="insight-box">
-          <span>💳 Total Payments</span>
-          <strong id="total-payments">0</strong>
+
+          <span>
+            💳 Total Payments
+          </span>
+
+          <strong id="total-payments">
+            0
+          </strong>
+
         </div>
 
+
         <div class="insight-box">
-          <span>💸 Fees Paid</span>
-          <strong id="insight-fees">$0</strong>
+
+          <span>
+            💸 Fees Paid
+          </span>
+
+          <strong id="insight-fees">
+            $0
+          </strong>
+
         </div>
+
 
         <div class="insight-box saving-insight">
-          <span>💰 Potential Savings</span>
-          <strong id="potential-savings">$0</strong>
+
+          <span>
+            💰 Potential Savings
+          </span>
+
+          <strong id="potential-savings">
+            $0
+          </strong>
+
         </div>
 
+
         <div class="insight-box">
-          <span>⛓️ Blockchain Proofs</span>
-          <strong id="blockchain-proofs">0</strong>
+
+          <span>
+            ⛓️ Blockchain Proofs
+          </span>
+
+          <strong id="blockchain-proofs">
+            0
+          </strong>
+
         </div>
 
       </div>
@@ -427,9 +744,14 @@
 
   <footer>
 
-    <strong>PayTrace AI</strong>
+    <strong>
+      PayTrace AI
+    </strong>
+
     · INNOBLOCK 2.0
-    · PS37
+
+    · Cross-Border Payment Tracking
+
     · Ethereum Sepolia Testnet
 
   </footer>
@@ -441,7 +763,8 @@
 
   <script src="config.js"></script>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
+
 
 </body>
 
